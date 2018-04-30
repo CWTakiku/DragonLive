@@ -1,7 +1,6 @@
 package dragonlive.cwl.com.dragonlive.editprofile;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,18 +30,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import dragonlive.cwl.com.dragonlive.MainActivity;
 import dragonlive.cwl.com.dragonlive.R;
+import dragonlive.cwl.com.dragonlive.util.PicChooseHelper;
 
 /**
  * Created by cwl on 2018/4/23.
  */
 
-public class EditProfileFragment extends Fragment {
+public class EditProfileFragment extends android.support.v4.app.Fragment {
     @Bind(R.id.title_bar)
     Toolbar mTitlebar;
     @Bind(R.id.avatar_img)
     ImageView mAvatarView;
     @Bind(R.id.avatar)
-    LinearLayout avatar;
+    LinearLayout mAvatar;
     @Bind(R.id.nick_name)
     ProfileEdit mNickNameEdt;
     @Bind(R.id.gender)
@@ -65,6 +66,7 @@ public class EditProfileFragment extends Fragment {
     @Bind(R.id.activity_edit_profile)
     LinearLayout activityEditProfile;
     private TIMUserProfile mUserProfile;
+    private PicChooseHelper mPicChooserHelper;
 
     @Nullable
     @Override
@@ -147,7 +149,7 @@ public class EditProfileFragment extends Fragment {
         return defaultValue;
     }
     private void setListeners() {
-        mAvatarView.setOnClickListener(clickListener);
+        mAvatar.setOnClickListener(clickListener);
         mNickNameEdt.setOnClickListener(clickListener);
         mGenderEdt.setOnClickListener(clickListener);
         mSignEdt.setOnClickListener(clickListener);
@@ -312,6 +314,46 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void choosePic() {
+        Log.i("info1", "choosePic: ");
+      if (mPicChooserHelper==null){
+          mPicChooserHelper=new PicChooseHelper(this, PicChooseHelper.PicType.Avatar);
+         mPicChooserHelper.setOnChooseResultListener(new PicChooseHelper.OnChooseResultListener() {
+             @Override
+             public void onSuccess(String url) {
+                 Log.i("info1", "onSuccess: "+url);
+                 updateAvatar(url);
+             }
 
+             @Override
+             public void onFail(String msg) {
+                 //Log.i("info1", "onfail: "+msg);
+                 Toast.makeText(getActivity(), "头像更新失败", Toast.LENGTH_SHORT).show();
+             }
+         });
+      }
+      mPicChooserHelper.showPicChooseDialog();
+    }
+
+    private void updateAvatar(String url) {
+        TIMFriendshipManager.getInstance().setFaceUrl(url, new TIMCallBack() {
+            @Override
+            public void onError(int i, String s) {
+                Toast.makeText(getActivity(), "头像更新失败", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess() {
+                //更新成功
+                  getSelfInfo();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mPicChooserHelper!=null){
+            mPicChooserHelper.onActivityResult(requestCode,resultCode,data);
+        }else
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

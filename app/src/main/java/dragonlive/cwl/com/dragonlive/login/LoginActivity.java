@@ -1,6 +1,8 @@
 package dragonlive.cwl.com.dragonlive.login;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.tencent.ilivesdk.ILiveCallBack;
 import com.tencent.ilivesdk.core.ILiveLoginManager;
 
 import butterknife.Bind;
+import dragonlive.cwl.com.dragonlive.MainActivity;
 import dragonlive.cwl.com.dragonlive.R;
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
 import dragonlive.cwl.com.dragonlive.common.BaseActivity;
@@ -102,9 +105,16 @@ public class LoginActivity extends BaseActivity {
             public void onSuccess(Object data) {
                 //最终登录成功
                 Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this, EditProfileActivity.class);
-                startActivity(intent);
+                SharedPreferences sp=getSharedPreferences("login", Context.MODE_PRIVATE);
+                boolean isFirst=sp.getBoolean("is_first",true);
+                if (isFirst) {
+                    Intent intent = new Intent();
+                    intent.setClass(LoginActivity.this, EditProfileActivity.class);
+                    startActivity(intent);
+                }else {
+                    Intent intent=new Intent(LoginActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
                 getSelfInfo();
 
                 finish();

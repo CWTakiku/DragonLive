@@ -26,6 +26,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
+        ButterKnife.unbind(this);
         super.onDestroy();
     }
 }

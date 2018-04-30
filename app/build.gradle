@@ -29,6 +29,8 @@ dependencies {
     compile 'com.tencent.ilivesdk:ilivesdk:1.8.5.0.2'
     compile 'com.tencent.livesdk:livesdk:1.1.2'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.aliyun.dpa:oss-android-sdk:+'
+    compile 'com.squareup.okio:okio:1.9.0'
     testCompile 'junit:junit:4.12'
     compile project(path: ':mysdk')
 }

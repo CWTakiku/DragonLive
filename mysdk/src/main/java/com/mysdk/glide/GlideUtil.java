@@ -9,6 +9,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 
+import java.io.File;
+
 /**
  * Created by cwl on 2018/3/28.
  */
@@ -26,6 +28,10 @@ public class GlideUtil {
     public static void loadLocalImage(Context mContext,int res,  ImageView  mImageView){
         Glide.with(mContext).load(res).into(mImageView);
     }
+    public static void loadLocalFileImage(Context mContext, File fileImg, ImageView  mImageView){
+        Glide.with(mContext).load(fileImg).into(mImageView);
+    }
+
 
     /**
      * 加载指定大小
