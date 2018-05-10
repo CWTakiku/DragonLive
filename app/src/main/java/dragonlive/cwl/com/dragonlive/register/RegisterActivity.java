@@ -1,5 +1,6 @@
 package dragonlive.cwl.com.dragonlive.register;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import com.tencent.ilivesdk.core.ILiveLoginManager;
 import butterknife.Bind;
 import dragonlive.cwl.com.dragonlive.R;
 import dragonlive.cwl.com.dragonlive.common.BaseActivity;
+import dragonlive.cwl.com.dragonlive.login.LoginActivity;
 
 public class RegisterActivity extends BaseActivity {
 
@@ -75,7 +77,7 @@ public class RegisterActivity extends BaseActivity {
                 //注册成功
                 Toast.makeText(RegisterActivity.this, "注册成功，去登录", Toast.LENGTH_SHORT).show();
                 //登录一下
-                //login();
+                login();
 
             }
 
@@ -86,6 +88,13 @@ public class RegisterActivity extends BaseActivity {
 
             }
         });
+    }
+
+    private void login() {
+        Intent intent=new Intent(RegisterActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
+
     }
 
 

@@ -1,5 +1,7 @@
 package com.mysdk.okhttp.request;
 
+import android.util.Log;
+
 import java.io.File;
 import java.util.Map;
 
@@ -52,6 +54,7 @@ public class CommonRequest {
         StringBuilder urlBuilder = new StringBuilder(url).append("?");
         if (params != null) {
             for (Map.Entry<String, String> entry : params.urlParams.entrySet()) {
+                //Log.i("info1", "createGetRequest: "+entry.getKey());
                 urlBuilder.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
             }
         }
@@ -65,6 +68,7 @@ public class CommonRequest {
         Headers mHeader = mHeaderBuild.build();
         Request request = new Request.Builder().url(urlBuilder.substring(0, urlBuilder.length() - 1))
                 .get().headers(mHeader).build();
+      Log.i("info1", "createGetRequest: "+urlBuilder.substring(0, urlBuilder.length() - 1).toString());
         return request;
     }
     /**

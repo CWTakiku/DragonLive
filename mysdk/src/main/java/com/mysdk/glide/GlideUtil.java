@@ -31,6 +31,9 @@ public class GlideUtil {
     public static void loadLocalFileImage(Context mContext, File fileImg, ImageView  mImageView){
         Glide.with(mContext).load(fileImg).into(mImageView);
     }
+    public static void loadLocalBitmapImage(Context mContext,Bitmap bitmap, ImageView  mImageView){
+        Glide.with(mContext).load(bitmap).into(mImageView);
+    }
 
 
     /**
@@ -57,6 +60,9 @@ public class GlideUtil {
 
     public static void loadBitmapCircle(Context mContext,Bitmap bitmap, ImageView mImageView, int radius){
         Glide.with(mContext).load(bitmap).transform(new CornersTransform(mContext,radius)).into(mImageView);
+    }
+    public static void loadLocalImageCircle(Context mContext,int resId, ImageView mImageView,int radius){
+        Glide.with(mContext).load(resId).transform(new CornersTransform(mContext,radius)).into(mImageView);
     }
 
     /**

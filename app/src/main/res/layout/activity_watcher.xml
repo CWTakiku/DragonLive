@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dragonlive.cwl.com.dragonlive.widget.SizeChangeRelative xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/size_change_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+<com.tencent.ilivesdk.view.AVRootView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/live_view"
+    android:background="@android:color/white"/>
+
+    <FrameLayout
+        android:id="@+id/bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <dragonlive.cwl.com.dragonlive.view.BottomControlView
+            android:id="@+id/control_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <dragonlive.cwl.com.dragonlive.view.ChatView
+            android:id="@+id/chat_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </FrameLayout>
+    <LinearLayout
+        android:id="@+id/chat_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottom_view"
+        android:orientation="horizontal">
+
+        <dragonlive.cwl.com.dragonlive.view.ChatMsgListView
+                android:id="@+id/chat_list"
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="2" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="200dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+</dragonlive.cwl.com.dragonlive.widget.SizeChangeRelative>

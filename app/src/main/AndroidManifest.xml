@@ -22,6 +22,14 @@
 
 
         </activity>
+        <activity android:name=".hostlive.HostLiveActivity">
+
+
+        </activity>
+        <activity android:name=".watcher.WatcherActivity">
+
+
+        </activity>
         <activity android:name=".register.RegisterActivity" />
         <activity android:name=".login.LoginActivity">
             <intent-filter>

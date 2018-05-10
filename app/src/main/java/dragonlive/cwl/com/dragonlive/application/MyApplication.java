@@ -23,6 +23,9 @@ import java.util.List;
 import dragonlive.cwl.com.dragonlive.editprofile.CustomProfile;
 import dragonlive.cwl.com.dragonlive.model.MessageObservable;
 
+import static dragonlive.cwl.com.dragonlive.network.NetConfig.ALiEndpoint;
+import static dragonlive.cwl.com.dragonlive.network.NetConfig.StsServerIp;
+
 /**
  * Created by cwl on 2018/4/22.
  */
@@ -54,12 +57,18 @@ public class MyApplication extends Application {
             customInfos.add(CustomProfile.CUSTOM_LEVEL);
             customInfos.add(CustomProfile.CUSTOM_RENZHENG);
             TIMManager.getInstance().initFriendshipSettings(CustomProfile.allBaseInfo,customInfos);
+            //初始化直播场景
+            mLiveConfig = new ILVLiveConfig();
+            ILVLiveManager.getInstance().init(mLiveConfig);
+
             ILVLiveManager.getInstance().init(new ILVLiveConfig()
                     .setLiveMsgListener(MessageObservable.getInstance()));
+
+
             //阿里
-            String endpoint = "http://oss-cn-shenzhen.aliyuncs.com";
+            String endpoint = ALiEndpoint;
             // 推荐使用OSSAuthCredentialsProvider，token过期后会自动刷新。
-            String stsServer = "http://47.106.155.189:7085";
+            String stsServer = StsServerIp;
             OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(stsServer);
 //config
             ClientConfiguration conf = new ClientConfiguration();

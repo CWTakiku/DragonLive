@@ -2,6 +2,7 @@ package com.mysdk.okhttp.request;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,7 +11,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 
 public class RequestParams {
-    public ConcurrentHashMap<String ,String> urlParams=new ConcurrentHashMap<String, String>();
+    public LinkedHashMap<String ,String> urlParams=new LinkedHashMap<>(); //保证顺序
     public ConcurrentHashMap<String, Object> fileParams= new ConcurrentHashMap<String, Object>();
 
    public RequestParams(){

@@ -69,4 +69,5 @@ public class PicChooseDialog extends TransParentDialog {
         dialog.getWindow().setAttributes(lp);
         super.show();
     }
+
 }

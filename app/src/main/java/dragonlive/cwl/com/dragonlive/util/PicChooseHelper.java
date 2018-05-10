@@ -31,7 +31,7 @@ public class PicChooseHelper {
     private static final int FROM_ALBUM = 1;
     private static final int CROP = 0;
     private TIMUserProfile mUserProfile;
-
+     private PicChooseDialog dialog;
     PicType mPicType;
     public static enum PicType {
         Avatar, Cover
@@ -48,7 +48,7 @@ public class PicChooseHelper {
         mUserProfile = MyApplication.getApplication().getSelfProfile();
     }
     public void showPicChooseDialog(){
-        PicChooseDialog dialog=new PicChooseDialog(mActivity);
+      dialog=new PicChooseDialog(mActivity);
         dialog.setOnDialogClickListener(new PicChooseDialog.OnDialogClickListener() {
             @Override
             public void onCamera() {
@@ -265,5 +265,11 @@ public class PicChooseHelper {
 
     public void setOnChooseResultListener(OnChooseResultListener l) {
         mOnChooserResultListener = l;
+    }
+
+    public void diaglogDismiss(){
+        if (dialog!=null){
+            dialog.dismiss();
+        }
     }
 }

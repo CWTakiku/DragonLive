@@ -38,4 +38,5 @@ public class TransParentDialog {
     {
         dialog.hide();
     }
+    public void dismiss(){dialog.dismiss();}
 }

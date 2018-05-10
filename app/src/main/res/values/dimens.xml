@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="round_small_radius">15dp</dimen>
+    <dimen name="round_small_dius">30dp</dimen>
+</resources>

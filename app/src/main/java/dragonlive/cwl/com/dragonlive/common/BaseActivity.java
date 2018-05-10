@@ -11,13 +11,15 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+    public final static String TAG="info1";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          setContentView(getLayoutId());
           ButterKnife.bind(this);
-        initView();
         initData();
+        initView();
+
     }
 
     protected abstract int getLayoutId();

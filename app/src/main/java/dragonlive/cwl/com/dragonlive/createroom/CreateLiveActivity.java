@@ -2,9 +2,12 @@ package dragonlive.cwl.com.dragonlive.createroom;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,12 +15,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mysdk.glide.GlideUtil;
+import com.mysdk.okhttp.listener.DisposeDataListener;
+import com.mysdk.okhttp.request.RequestParams;
 import com.tencent.TIMUserProfile;
 
 import java.io.File;
 
 import dragonlive.cwl.com.dragonlive.R;
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
+import dragonlive.cwl.com.dragonlive.hostlive.HostLiveActivity;
+import dragonlive.cwl.com.dragonlive.model.RoomInfoModel;
+import dragonlive.cwl.com.dragonlive.network.NetConfig;
+import dragonlive.cwl.com.dragonlive.network.RequestCenter;
 import dragonlive.cwl.com.dragonlive.util.AliYunOssHelper;
 import dragonlive.cwl.com.dragonlive.util.PicChooseHelper;
 
@@ -79,7 +88,7 @@ public class CreateLiveActivity extends AppCompatActivity {
     private void requestCreateRoom() {
 
         TIMUserProfile selfProfile = MyApplication.getApplication().getSelfProfile();
-
+       //上传封面到阿里OSS
         AliYunOssHelper aliOssHelper=new AliYunOssHelper();
         aliOssHelper.setOnResultListener(new AliYunOssHelper.OnResultListener() {
             @Override
@@ -94,6 +103,36 @@ public class CreateLiveActivity extends AppCompatActivity {
         });
         String name = selfProfile.getIdentifier()+ "_" + System.currentTimeMillis() + "_cover";
         aliOssHelper.uploadToOSS("dragonlive",name,coverPath);
+      //发送创建Room请求
+        RequestParams params=new RequestParams();
+        params.put("action","create");
+        params.put("userId",selfProfile.getIdentifier());
+        params.put("userAvatar",selfProfile.getFaceUrl());
+        String nickName = selfProfile.getNickName();
+        params.put("userName",TextUtils.isEmpty(nickName) ? selfProfile.getIdentifier() : nickName);
+        params.put("liveTitle", mTitleEt.getText().toString());
+        params.put("liveCover",coverUrl);
+        RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+            @Override
+            public void onSuccess(Object object) {
+                RoomInfoModel roomInfoModel= (RoomInfoModel) object;
+                Log.i("info1", "onSuccess: roomid"+ roomInfoModel.getData().roomId+" userid"+roomInfoModel.getData().userId);
+               // Toast.makeText(CreateLiveActivity.this, "请求成功"+roomInfoModel.getData().roomId, Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent();
+                intent.setClass(CreateLiveActivity.this,HostLiveActivity.class);
+                intent.putExtra("roomId",roomInfoModel.getData().roomId);
+                startActivity(intent);
+                finish();
+                //Log.i("info1", "onSuccess: "+roomInfo.roomId);
+            }
+
+            @Override
+            public void onFailure(Object object) {
+               // Log.i("info1", "onFailure: sb"+object.toString());
+                Toast.makeText(CreateLiveActivity.this, "创建房间失败", Toast.LENGTH_SHORT).show();
+
+            }
+        }, RoomInfoModel.class);
 
     }
 
@@ -123,12 +162,17 @@ public class CreateLiveActivity extends AppCompatActivity {
     private String coverPath = null;
 
     private void updateCover(String path) {
-       // Log.i("info1", "updateCover: "+path);
+
         coverPath = path;
         mCoverTipTxt.setVisibility(View.GONE);
         File file=new File(path);
-       // Log.i("info1", "updateCover: "+file.getName());
-        GlideUtil.loadLocalFileImage(this,file,mCoverImg);
+        if (file.exists()) {
+            Uri uri = Uri.fromFile(new File(path));
+            mCoverImg.setImageURI(uri);
+            return;
+        }
+        GlideUtil.loadLocalImage(this,R.drawable.default_avatar,mCoverImg);
+
     }
 
     @Override
@@ -138,5 +182,11 @@ public class CreateLiveActivity extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPicChooserHelper.diaglogDismiss();
     }
 }
