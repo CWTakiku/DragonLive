@@ -41,6 +41,8 @@ public class LoginActivity extends BaseActivity {
     @Bind(R.id.activity_login)
     RelativeLayout activityLogin;
 
+    private SharedPreferences sp;
+    private String pwd="";
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -51,9 +53,16 @@ public class LoginActivity extends BaseActivity {
 
     }
 
-    private static final String TAG = "LoginActivity";
+
     @Override
     protected void initData() {
+       Intent intent= getIntent();
+        boolean isFromLogout=intent.getBooleanExtra("logout",false);
+        sp=getSharedPreferences("login", Context.MODE_PRIVATE);
+        boolean first_login=sp.getBoolean("is_first",true);
+        if (!first_login&&!isFromLogout){
+          logined();
+        }
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,15 +79,51 @@ public class LoginActivity extends BaseActivity {
         });
 
     }
-  //注册
+
+    //注册
     private void register() {
         Intent intent=new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(intent);
     }
+    //已登录过得
+    private void logined() {
+
+
+        final String    accountStr=sp.getString("id","");
+        String   passwordStr=sp.getString("pwd","");
+        mAccountEdt.setText(accountStr);
+        mPasswordEdt.setText(passwordStr);
+      //  Log.i("info1", "logined: "+accountStr);
+       // Log.i("info1", "pa : "+passwordStr);
+
+
+        if (TextUtils.isEmpty(accountStr) || TextUtils.isEmpty(passwordStr)){
+            Toast.makeText(this, "输入不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        ILiveLoginManager.getInstance().tlsLoginAll(accountStr, passwordStr, new ILiveCallBack() {
+            @Override
+            public void onSuccess(Object data) {
+                LoginLive(accountStr,String.valueOf(data));
+            }
+
+            @Override
+            public void onError(String module, int errCode, String errMsg) {
+                //登录失败
+                Toast.makeText(LoginActivity.this, "tls登录失败：" + errMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
  //登录
     private void login() {
-        final String accountStr = mAccountEdt.getText().toString();
-        String passwordStr = mPasswordEdt.getText().toString();
+
+        final String   accountStr = mAccountEdt.getText().toString();
+        String   passwordStr = mPasswordEdt.getText().toString();
+
+              pwd=passwordStr;
         if (TextUtils.isEmpty(accountStr) || TextUtils.isEmpty(passwordStr)){
             Toast.makeText(this, "输入不能为空", Toast.LENGTH_SHORT).show();
             return;
@@ -98,16 +143,23 @@ public class LoginActivity extends BaseActivity {
         });
     }
 
-    private void LoginLive(String accountStr, String data) {
-        ILiveLoginManager.getInstance().iLiveLogin(accountStr, data, new ILiveCallBack() {
+    private void LoginLive(final String accountStr, final String passwordStr){
+        ILiveLoginManager.getInstance().iLiveLogin(accountStr, passwordStr,new ILiveCallBack() {
 
             @Override
             public void onSuccess(Object data) {
                 //最终登录成功
                 Toast.makeText(LoginActivity.this, "登录成功！", Toast.LENGTH_SHORT).show();
-                SharedPreferences sp=getSharedPreferences("login", Context.MODE_PRIVATE);
-                boolean isFirst=sp.getBoolean("is_first",true);
+                //是否是第一次登陆
+              boolean  isFirst=sp.getBoolean("is_first",true);
+                SharedPreferences.Editor editor=sp.edit();
+                editor.putString("id",accountStr);
+                editor.putString("pwd",pwd);
+                editor.commit();
                 if (isFirst) {
+
+                    editor.putBoolean("is_first",false);
+                    editor.commit();
                     Intent intent = new Intent();
                     intent.setClass(LoginActivity.this, EditProfileActivity.class);
                     startActivity(intent);

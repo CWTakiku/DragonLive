@@ -22,9 +22,7 @@ public class EditProfileActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-        SharedPreferences sp=getSharedPreferences("login", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor=sp.edit();
-        editor.putBoolean("is_first",false);
-        editor.commit();
+
+
     }
 }

@@ -12,6 +12,12 @@
     android:id="@+id/live_view"
     android:background="@android:color/white"/>
 
+    <dragonlive.cwl.com.dragonlive.view.TitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_view">
+
+    </dragonlive.cwl.com.dragonlive.view.TitleView>
     <FrameLayout
         android:id="@+id/bottom_view"
         android:layout_width="match_parent"
@@ -46,4 +52,45 @@
             android:layout_height="200dp"
             android:layout_weight="1" />
     </LinearLayout>
+    <dragonlive.cwl.com.dragonlive.view.DanmuView
+        android:id="@+id/danmu_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+    </dragonlive.cwl.com.dragonlive.view.DanmuView>
+    <dragonlive.cwl.com.dragonlive.view.GiftRepeatView
+        android:id="@+id/gift_repeat_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_list_view">
+    </dragonlive.cwl.com.dragonlive.view.GiftRepeatView>
+    <dragonlive.cwl.com.dragonlive.view.GiftFullView
+        android:id="@+id/parche_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </dragonlive.cwl.com.dragonlive.view.GiftFullView>
+    <tyrantgit.widget.HeartLayout
+        android:id="@+id/heart_layout"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/bottom_view">
+        <ImageView
+            android:id="@+id/heart_view"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/whiteheart"
+            android:layout_marginLeft="52dp"
+            android:layout_marginBottom="2dp"
+            />
+    </tyrantgit.widget.HeartLayout>
+    <dragonlive.cwl.com.dragonlive.view.VipEnterView
+        android:id="@+id/vip_center_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/chat_list_view">
+
+    </dragonlive.cwl.com.dragonlive.view.VipEnterView>
 </dragonlive.cwl.com.dragonlive.widget.SizeChangeRelative>

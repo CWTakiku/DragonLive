@@ -127,7 +127,7 @@ public class LiveListAdapter extends BaseAdapter {
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setClass(mContext, WatcherActivity.class);
-                    intent.putExtra("roomId", roomInfo.roomId+1);
+                    intent.putExtra("roomId", roomInfo.roomId+100);//因为 在创建直播间号的时候已经加了一百 所以这里需要跟着加100
                     intent.putExtra("hostId", roomInfo.userId);
                     mContext.startActivity(intent);
                 }

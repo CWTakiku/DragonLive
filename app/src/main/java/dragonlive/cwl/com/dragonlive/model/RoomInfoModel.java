@@ -2,6 +2,7 @@ package dragonlive.cwl.com.dragonlive.model;
 
 /**
  * Created by Administrator.
+ * 返回的json
  */
 
 public class RoomInfoModel {

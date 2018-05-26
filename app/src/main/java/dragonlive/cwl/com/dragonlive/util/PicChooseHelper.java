@@ -11,13 +11,18 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.view.View;
+import android.widget.Toast;
 
 import com.tencent.TIMUserProfile;
+import com.tencent.ilivesdk.ILiveCallBack;
+import com.tencent.ilivesdk.core.ILiveLoginManager;
 
 import java.io.File;
 
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
 import dragonlive.cwl.com.dragonlive.editprofile.PicChooseDialog;
+import dragonlive.cwl.com.dragonlive.login.LoginActivity;
 
 /**
  * Created by cwl on 2018/4/23.
@@ -48,7 +53,11 @@ public class PicChooseHelper {
         mUserProfile = MyApplication.getApplication().getSelfProfile();
     }
     public void showPicChooseDialog(){
+
       dialog=new PicChooseDialog(mActivity);
+        if (mFragment==null){
+     dialog.quitLogin.setVisibility(View.INVISIBLE);
+        }
         dialog.setOnDialogClickListener(new PicChooseDialog.OnDialogClickListener() {
             @Override
             public void onCamera() {
@@ -60,6 +69,29 @@ public class PicChooseHelper {
             public void onAlbum() {
               //从相册中选择
                 takePicFromAlbum();
+            }
+
+            @Override
+            public void onQuitLogin(View view) {
+             //退出登录
+                ILiveLoginManager.getInstance().iLiveLogout(new ILiveCallBack() {
+                    @Override
+                    public void onSuccess(Object data) {
+                        if (mFragment!=null){
+                           Intent intent=new Intent(mFragment.getActivity(), LoginActivity.class);
+                            intent.putExtra("logout",true);
+                            mFragment.startActivity(intent);
+                            //要销毁dialog
+                            dialog.dismiss();
+                            mFragment.getActivity().finish();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String module, int errCode, String errMsg) {
+                        Toast.makeText(mActivity, "退出失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         dialog.show();
@@ -272,4 +304,5 @@ public class PicChooseHelper {
             dialog.dismiss();
         }
     }
+
 }

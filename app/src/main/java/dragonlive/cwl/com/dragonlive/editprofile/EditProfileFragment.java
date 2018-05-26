@@ -30,6 +30,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import dragonlive.cwl.com.dragonlive.MainActivity;
 import dragonlive.cwl.com.dragonlive.R;
+import dragonlive.cwl.com.dragonlive.application.MyApplication;
 import dragonlive.cwl.com.dragonlive.util.PicChooseHelper;
 
 /**
@@ -80,6 +81,8 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
         return view;
     }
 
+
+
     private void setTitleBar() {
         mTitlebar.setTitle("编辑个人信息");
         mTitlebar.setTitleTextColor(Color.WHITE);
@@ -111,6 +114,7 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
             @Override
             public void onSuccess(TIMUserProfile timUserProfile) {
                 //获取自己信息成功
+                MyApplication.getApplication().setSelfProfile(timUserProfile);
                 mUserProfile = timUserProfile;
                 updateViews(timUserProfile);
             }
@@ -355,5 +359,13 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
             mPicChooserHelper.onActivityResult(requestCode,resultCode,data);
         }else
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mPicChooserHelper!=null)
+        mPicChooserHelper.diaglogDismiss();
+        super.onDestroy();
+
     }
 }

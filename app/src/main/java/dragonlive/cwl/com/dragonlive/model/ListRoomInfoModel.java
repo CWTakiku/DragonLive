@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * Created by cwl on 2018/5/5.
+ * 返回的是LIst 房间 包含code
  */
 
 public class ListRoomInfoModel {

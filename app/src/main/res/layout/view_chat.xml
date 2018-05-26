@@ -20,7 +20,13 @@
         android:layout_margin="5dp"
         android:layout_weight="1"
         android:background="@null" />
-
+    <TextView
+        android:id="@+id/chat_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="返回"
+        android:textColor="#23BE9F" />
     <TextView
         android:id="@+id/chat_send"
         android:layout_width="wrap_content"

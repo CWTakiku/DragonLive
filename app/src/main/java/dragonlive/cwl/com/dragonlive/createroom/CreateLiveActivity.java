@@ -186,7 +186,9 @@ public class CreateLiveActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (mPicChooserHelper!=null)
         mPicChooserHelper.diaglogDismiss();
+        super.onDestroy();
+
     }
 }

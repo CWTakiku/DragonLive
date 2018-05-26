@@ -2,4 +2,6 @@
 <resources>
     <dimen name="round_small_radius">15dp</dimen>
     <dimen name="round_small_dius">30dp</dimen>
+    <dimen name="round_big_radius">20dp</dimen>
+    <dimen name="round_big_dius">40dp</dimen>
 </resources>

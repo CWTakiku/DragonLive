@@ -32,6 +32,8 @@ public class ChatView extends LinearLayout {
     EditText chatContentEdit;
     @Bind(R.id.chat_send)
     TextView chatSend;
+    @Bind(R.id.chat_back)
+    TextView back;
 
     public ChatView(Context context) {
         super(context);
@@ -76,6 +78,14 @@ public class ChatView extends LinearLayout {
                  sendChatMsg();
             }
         });
+        back.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mOnChatSendListener!=null){
+                    mOnChatSendListener.onBackClick();
+                }
+            }
+        });
     }
 
     private void sendChatMsg() {
@@ -101,5 +111,6 @@ public class ChatView extends LinearLayout {
 
     public interface OnChatSendListener {
         public void onChatSend(ILVCustomCmd msg);
+        void onBackClick();
     }
 }

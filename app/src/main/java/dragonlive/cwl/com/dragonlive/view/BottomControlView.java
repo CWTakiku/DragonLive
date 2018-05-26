@@ -65,6 +65,7 @@ public class BottomControlView extends RelativeLayout {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
+
                 case R.id.chat:
                     if (onControlListener != null)
                         onControlListener.onChatClick();

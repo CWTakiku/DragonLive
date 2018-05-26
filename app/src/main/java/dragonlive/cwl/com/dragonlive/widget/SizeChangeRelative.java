@@ -28,12 +28,12 @@ public class SizeChangeRelative extends RelativeLayout{
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        if (h<oldh){
-            //键盘显示 画面变小
-            mOnSizeChangeListener.onSmall();
-        }else {
+        if (h>oldh){
             //键盘隐藏，画面变大
             mOnSizeChangeListener.onLarge();
+        }else {
+            //键盘显示 画面变小
+            mOnSizeChangeListener.onSmall();
         }
     }
     private OnSizeChangeListener mOnSizeChangeListener;

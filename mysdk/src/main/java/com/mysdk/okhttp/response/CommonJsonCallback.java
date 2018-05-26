@@ -32,7 +32,7 @@ public class CommonJsonCallback implements Callback {
     protected final String RESULT_CODE = "ecode"; // 有返回则对于http请求来说是成功的，但还有可能是业务逻辑上的错误
     protected final int RESULT_CODE_VALUE = 0;
     protected final String ERROR_MSG = "emsg";
-    protected final String EMPTY_MSG = "";
+    protected final String EMPTY_MSG = "empty";
     protected final String COOKIE_STORE = "Set-Cookie"; // decide the server it
     // can has the value of
     // set-cookie2

@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dragonlive.cwl.com.dragonlive.editprofile.CustomProfile;
-import dragonlive.cwl.com.dragonlive.model.MessageObservable;
 
 import static dragonlive.cwl.com.dragonlive.network.NetConfig.ALiEndpoint;
 import static dragonlive.cwl.com.dragonlive.network.NetConfig.StsServerIp;
@@ -61,8 +60,8 @@ public class MyApplication extends Application {
             mLiveConfig = new ILVLiveConfig();
             ILVLiveManager.getInstance().init(mLiveConfig);
 
-            ILVLiveManager.getInstance().init(new ILVLiveConfig()
-                    .setLiveMsgListener(MessageObservable.getInstance()));
+//            ILVLiveManager.getInstance().init(new ILVLiveConfig()
+//                    .setLiveMsgListener(MessageObservable.getInstance()));
 
 
             //阿里
@@ -78,7 +77,6 @@ public class MyApplication extends Application {
             conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
             OSS oss = new OSSClient(MyApplication.getContext(), endpoint, credentialProvider, conf);
             this.oss=oss;
-
         }
     }
     public void setSelfProfile(TIMUserProfile userProfile) {

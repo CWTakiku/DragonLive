@@ -48,8 +48,8 @@ public class LiveListFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_live_list, null, false);
         ButterKnife.bind(this, view);
-        requestLiveList();
         setData();
+        requestLiveList();
         return view;
     }
 
@@ -57,12 +57,8 @@ public class LiveListFragment extends BaseFragment {
         titlebar.setTitle("热播列表");
         titlebar.setTitleTextColor(Color.WHITE);
         ((AppCompatActivity) getActivity()).setSupportActionBar(titlebar);
-
-       if (mLiveListAdapter!=null) {
-           Log.i("info1", "setData:setAdapter ");
-           mLiveList.setAdapter(mLiveListAdapter);
-       }
-
+           mLiveListAdapter=new  LiveListAdapter(getActivity());
+        mLiveList.setAdapter(mLiveListAdapter);
         mSwipeRefreshLayoutList.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -83,8 +79,8 @@ public class LiveListFragment extends BaseFragment {
             @Override
             public void onSuccess(Object object) {
                 ListRoomInfoModel listRoominfos= (ListRoomInfoModel) object;
-               // Log.i("info1", "onSuccess: "+listRoominfos.getRoominfo().size());
-                mLiveListAdapter=new  LiveListAdapter(getActivity());
+
+
                 mLiveListAdapter.removeAllRoomInfos();
                 mLiveListAdapter.addRoomInfos(listRoominfos.getData());
 

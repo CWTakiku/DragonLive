@@ -15,6 +15,7 @@ import dragonlive.cwl.com.dragonlive.widget.TransParentDialog;
  */
 
 public class PicChooseDialog extends TransParentDialog {
+    public View quitLogin;
     public PicChooseDialog(Activity activity) {
         super(activity);
         View view= LayoutInflater.from(activity).inflate(R.layout.dialog_pic_choose,null,false);
@@ -23,6 +24,7 @@ public class PicChooseDialog extends TransParentDialog {
         View camera = view.findViewById(R.id.pic_camera);
         View picLib = view.findViewById(R.id.pic_album);
         View cancel = view.findViewById(R.id.pic_cancel);
+        quitLogin=view.findViewById(R.id.quit_login);
         camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -39,6 +41,13 @@ public class PicChooseDialog extends TransParentDialog {
                 if (onDialogClickListener != null) {
                     onDialogClickListener.onAlbum();
                 }
+            }
+        });
+        quitLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //退出登录
+               onDialogClickListener.onQuitLogin(v);
             }
         });
 
@@ -59,6 +68,8 @@ public class PicChooseDialog extends TransParentDialog {
         void onCamera();
 
         void onAlbum();
+
+        void onQuitLogin(View view);
     }
 
     @Override
