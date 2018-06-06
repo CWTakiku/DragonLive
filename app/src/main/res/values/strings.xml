@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">DragonLive</string>
+    <string name="share">互动直播</string>
+    <string name="update_download_finish">下载完成</string>
+    <string name="update_download_failed">下载失败</string>
+    <string name="update_download_failed_msg">下载失败，请检查网络连接或储存空间</string>
+    <string name="update_download_processing">正在下载</string>
+    <string name="update_download_pause">暂停</string>
 </resources>

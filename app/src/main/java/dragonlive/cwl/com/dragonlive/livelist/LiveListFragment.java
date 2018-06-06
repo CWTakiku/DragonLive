@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,7 +74,7 @@ public class LiveListFragment extends BaseFragment {
         RequestParams params=new RequestParams();
         params.put("action","getList");
         params.put("pageIndex","0");
-        RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+        RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object object) {
                 ListRoomInfoModel listRoominfos= (ListRoomInfoModel) object;
@@ -89,7 +88,7 @@ public class LiveListFragment extends BaseFragment {
 
             @Override
             public void onFailure(Object object) {
-                Log.i("info1", "onFailure: "+ object.toString());
+//                Log.i("info1", "onFailure: "+ object.toString());
                 Toast.makeText(getActivity(), "请求列表失败", Toast.LENGTH_SHORT).show();
                 mSwipeRefreshLayoutList.setRefreshing(false);
             }

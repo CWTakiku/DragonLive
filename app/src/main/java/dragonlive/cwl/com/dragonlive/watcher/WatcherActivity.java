@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import com.mysdk.okhttp.exception.OkHttpException;
 import com.mysdk.okhttp.listener.DisposeDataListener;
 import com.mysdk.okhttp.request.RequestParams;
+import com.mysdk.util.Util;
 import com.tencent.TIMFriendshipManager;
 import com.tencent.TIMUserProfile;
 import com.tencent.TIMValueCallBack;
@@ -29,6 +31,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.Bind;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import dragonlive.cwl.com.dragonlive.R;
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
 import dragonlive.cwl.com.dragonlive.common.BaseActivity;
@@ -81,6 +84,8 @@ public class WatcherActivity extends BaseActivity {
     TitleView mTitleView;
     @Bind(R.id.vip_center_view)
     VipEnterView mVipEnterView;
+    @Bind(R.id.share_room)
+    ImageView mShreaRoomView;
 
     private CustomCmdManager customCmdManager;
     private GiftSelectDialog mGiftDialog;
@@ -104,8 +109,35 @@ public class WatcherActivity extends BaseActivity {
         customCmdManager = new CustomCmdManager(mChatMsgListView, mDanmuView,mGiftRepeatView,mGiftFullView,mTitleView,mVipEnterView);
         joinRoom();
         receiveMsg();
+        mShreaRoomView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showShare();
+            }
+        });
+
     }
 
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle(MyApplication.getApplication().getSelfProfile().getNickName()+"的直播间");
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://www.baidu.com");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("房间号:"+mRoomId);
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+       oks.setImageUrl(MyApplication.getApplication().getSelfProfile().getFaceUrl());
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment(MyApplication.getApplication().getSelfProfile().getNickName()+"的直播间");
+        // 启动分享GUI
+        oks.show(WatcherActivity.this);
+    }
 
 
     //接收消息
@@ -172,7 +204,7 @@ public class WatcherActivity extends BaseActivity {
                 params.put("action","heartBeat");
                 params.put("roomId",String.valueOf(mRoomId));
                 params.put("userId",String.valueOf(MyApplication.getApplication().getSelfProfile().getIdentifier()));
-                RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+                RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
                     @Override
                     public void onSuccess(Object object) {
 
@@ -207,7 +239,7 @@ public class WatcherActivity extends BaseActivity {
         RequestParams params=new RequestParams();
         params.put("action","getWatcher");
         params.put("roomId",String.valueOf(mRoomId));
-        RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+        RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object object) {
                 Watchers watchers= (Watchers) object;
@@ -240,7 +272,7 @@ public class WatcherActivity extends BaseActivity {
         params.put("action","join");
         params.put("userId",MyApplication.getApplication().getSelfProfile().getIdentifier());
         params.put("roomId",String.valueOf(mRoomId));
-        RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+        RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object object) {
 
@@ -337,10 +369,14 @@ public class WatcherActivity extends BaseActivity {
             }
         });
         mChatView.setOnChatSendListener(new ChatView.OnChatSendListener() {
+
+
             @Override
-            public void onChatSend(ILVCustomCmd customCmd) {
+            public void onChatSend(ILVCustomCmd customCmd, EditText editText) {
                 //发送消息
                 customCmdManager.sendMsg(customCmd);
+                //隐藏软键盘
+                Util.hideSoftInputMethod(WatcherActivity.this,editText);
             }
 
             @Override
@@ -356,7 +392,7 @@ public class WatcherActivity extends BaseActivity {
     private void quitRoom() {
         //退出房间
         customCmdManager.quitRoom(mRoomId, MyApplication.getApplication().getSelfProfile().getIdentifier());
-        finish();
+      removeCurrent();
 
 
     }

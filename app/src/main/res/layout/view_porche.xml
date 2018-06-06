@@ -39,16 +39,16 @@
             android:id="@+id/wheel_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="0dp"
-            android:layout_marginTop="62dp"
+            android:layout_marginLeft="4dp"
+            android:layout_marginTop="39dp"
             android:src="@drawable/wheel_back_drawable" />
 
         <ImageView
             android:id="@+id/wheel_front"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="160dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginLeft="146dp"
+            android:layout_marginTop="71dp"
             android:src="@drawable/wheel_front_drawable" />
     </FrameLayout>
 

@@ -124,5 +124,5 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="注册即表示同意 小熊直播条款" />
+        android:text="注册即表示同意直播条款" />
 </LinearLayout>

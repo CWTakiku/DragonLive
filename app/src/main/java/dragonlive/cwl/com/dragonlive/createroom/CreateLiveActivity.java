@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -66,7 +65,13 @@ public class CreateLiveActivity extends AppCompatActivity {
 
     private void setupTitlebar() {
         Toolbar titlebar = (Toolbar) findViewById(R.id.titlebar);
-        titlebar.setTitle("开始我的直播");
+        titlebar.setTitle("<  开始我的直播");
+        titlebar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               finish();
+            }
+        });
         titlebar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(titlebar);
     }
@@ -112,17 +117,17 @@ public class CreateLiveActivity extends AppCompatActivity {
         params.put("userName",TextUtils.isEmpty(nickName) ? selfProfile.getIdentifier() : nickName);
         params.put("liveTitle", mTitleEt.getText().toString());
         params.put("liveCover",coverUrl);
-        RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+        RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
             @Override
             public void onSuccess(Object object) {
                 RoomInfoModel roomInfoModel= (RoomInfoModel) object;
-                Log.i("info1", "onSuccess: roomid"+ roomInfoModel.getData().roomId+" userid"+roomInfoModel.getData().userId);
+               // Log.i("info1", "onSuccess: roomid"+ roomInfoModel.getData().roomId+" userid"+roomInfoModel.getData().userId);
                // Toast.makeText(CreateLiveActivity.this, "请求成功"+roomInfoModel.getData().roomId, Toast.LENGTH_SHORT).show();
                 Intent intent=new Intent();
                 intent.setClass(CreateLiveActivity.this,HostLiveActivity.class);
                 intent.putExtra("roomId",roomInfoModel.getData().roomId);
                 startActivity(intent);
-                finish();
+               finish();
                 //Log.i("info1", "onSuccess: "+roomInfo.roomId);
             }
 

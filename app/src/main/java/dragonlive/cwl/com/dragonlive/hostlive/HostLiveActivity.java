@@ -1,12 +1,14 @@
 package dragonlive.cwl.com.dragonlive.hostlive;
 
 import android.graphics.Color;
-import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.mysdk.okhttp.listener.DisposeDataListener;
 import com.mysdk.okhttp.request.RequestParams;
+import com.mysdk.util.Util;
 import com.tencent.av.sdk.AVRoomMulti;
 import com.tencent.ilivesdk.ILiveCallBack;
 import com.tencent.ilivesdk.ILiveConstants;
@@ -22,6 +24,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import butterknife.Bind;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import dragonlive.cwl.com.dragonlive.R;
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
 import dragonlive.cwl.com.dragonlive.common.BaseActivity;
@@ -32,6 +35,7 @@ import dragonlive.cwl.com.dragonlive.view.BottomControlView;
 import dragonlive.cwl.com.dragonlive.view.ChatMsgListView;
 import dragonlive.cwl.com.dragonlive.view.ChatView;
 import dragonlive.cwl.com.dragonlive.view.DanmuView;
+import dragonlive.cwl.com.dragonlive.view.GiftFullView;
 import dragonlive.cwl.com.dragonlive.view.GiftRepeatView;
 import dragonlive.cwl.com.dragonlive.view.TitleView;
 import dragonlive.cwl.com.dragonlive.view.VipEnterView;
@@ -60,12 +64,16 @@ public class HostLiveActivity extends BaseActivity {
     DanmuView mDanmuView;
     @Bind(R.id.gift_repeat_view)
     GiftRepeatView mGiftRepeatView;
+    @Bind(R.id.parche_view)
+    GiftFullView mGiftFullView;
     @Bind(R.id.heart_layout)
     HeartLayout mHearLayout;
     @Bind(R.id.title_view)
     TitleView mTitleView;
     @Bind(R.id.vip_center_view)
     VipEnterView mVipEnterView;
+    @Bind(R.id.share_room)
+    ImageView mShareRoomView;
 
 
 
@@ -95,14 +103,14 @@ public class HostLiveActivity extends BaseActivity {
         mHost_Live_relative.setOnSizeChangeListener(new SizeChangeRelative.OnSizeChangeListener() {
             @Override
             public void onLarge() {
-                Log.i(TAG, "onLarge: ");
+//                Log.i(TAG, "onLarge: ");//软键盘隐藏
                 mBottomControlView.setVisibility(View.VISIBLE);
                 mChat_view.setVisibility(View.INVISIBLE);
             }
 
             @Override
             public void onSmall() {
-                Log.i(TAG, "onSmall: ");
+//                Log.i(TAG, "onSmall: ");//软键盘显示
                 mBottomControlView.setVisibility(View.INVISIBLE);
                 mChat_view.setVisibility(View.VISIBLE);
             }
@@ -115,10 +123,14 @@ public class HostLiveActivity extends BaseActivity {
                 mChat_view.setVisibility(View.VISIBLE);
                 mBottomControlView.setVisibility(View.INVISIBLE);
                 mChat_view.setOnChatSendListener(new ChatView.OnChatSendListener() {
+
+
                     @Override
-                    public void onChatSend( ILVCustomCmd customCmd) {
+                    public void onChatSend(ILVCustomCmd customCmd, EditText editText) {
                         //发送消息
                         customCmdManager.sendMsg(customCmd);
+                        //隐藏软键盘
+                        Util.hideSoftInputMethod(HostLiveActivity.this,editText);
                     }
 
                     @Override
@@ -211,7 +223,7 @@ public class HostLiveActivity extends BaseActivity {
    //退出直播间
     private void quitLive() {
         customCmdManager.quitLive(mRoomId, MyApplication.getApplication().getSelfProfile().getIdentifier());
-        finish();
+        removeCurrent();
         //发送退出直播间消息给服务器
 
     }
@@ -258,7 +270,7 @@ public class HostLiveActivity extends BaseActivity {
             public void onError(String module, int errCode, String errMsg) {
 //                Log.i("info1", "onError: "+module+" errCode:"+errCode+" errMsg:"+errMsg);
                 Toast.makeText(HostLiveActivity.this, "创建房间失败", Toast.LENGTH_SHORT).show();
-                finish();
+              removeCurrent();
             }
         });
     }
@@ -271,7 +283,7 @@ public class HostLiveActivity extends BaseActivity {
                 params.put("action","heartBeat");
                 params.put("roomId",String.valueOf(mRoomId));
                 params.put("userId",String.valueOf(MyApplication.getApplication().getSelfProfile().getIdentifier()));
-                RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+                RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
                     @Override
                     public void onSuccess(Object object) {
 
@@ -308,7 +320,35 @@ public class HostLiveActivity extends BaseActivity {
 
     @Override
     protected void initData() {
-  customCmdManager =new CustomCmdManager(mChatMsgListView,mDanmuView,null,null,mTitleView,mVipEnterView);
+  customCmdManager =new CustomCmdManager(mChatMsgListView,mDanmuView,mGiftRepeatView,mGiftFullView,mTitleView,mVipEnterView);
+        mShareRoomView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showShare();
+            }
+
+
+        });
+    }
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle(MyApplication.getApplication().getSelfProfile().getNickName()+"的直播间");
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://www.baidu.com");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("房间号:"+mRoomId);
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+       oks.setImageUrl(MyApplication.getApplication().getSelfProfile().getFaceUrl());//网络图片
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment(MyApplication.getApplication().getSelfProfile().getNickName()+"的直播间");
+        // 启动分享GUI
+        oks.show(HostLiveActivity.this);
     }
     @Override
     protected void onPause() {
@@ -326,7 +366,6 @@ public class HostLiveActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
         heartTimer.cancel();
       heartBeatTimer.cancel();
         ILVLiveManager.getInstance().onDestory();

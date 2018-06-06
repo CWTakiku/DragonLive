@@ -21,6 +21,7 @@ import com.tencent.ilivesdk.core.ILiveLoginManager;
 import java.io.File;
 
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
+import dragonlive.cwl.com.dragonlive.common.BaseActivity;
 import dragonlive.cwl.com.dragonlive.editprofile.PicChooseDialog;
 import dragonlive.cwl.com.dragonlive.login.LoginActivity;
 
@@ -83,7 +84,7 @@ public class PicChooseHelper {
                             mFragment.startActivity(intent);
                             //要销毁dialog
                             dialog.dismiss();
-                            mFragment.getActivity().finish();
+                            ((BaseActivity) mFragment.getActivity()).removeCurrent();
                         }
                     }
 
@@ -168,12 +169,14 @@ public class PicChooseHelper {
     //得到URI
     private Uri createUri(String name) {
         String filename;
-        String dirPath= Environment.getExternalStorageDirectory()+"/"+mActivity.getApplication().getApplicationInfo().packageName;
+        String dirPath= Environment.getExternalStorageDirectory()+"/dragonlive";
         File dir=new  File(dirPath);
+        boolean isExists=false;
         if (!dir.exists()){
-            dir.mkdir();
+          isExists= dir.mkdir();  //这里出问题 要动态申请权限
         }
         String id="";
+//        Log.i("info1", "createUri: "+isExists);
         if (mUserProfile!=null){
             id=mUserProfile.getIdentifier();
         }
@@ -226,6 +229,7 @@ public class PicChooseHelper {
                             mOnChooserResultListener.onFail(msg);
                         }
                     });
+                     //上传
                     aliYunOssHelper.uploadToOSS("dragonlive", name, cropUri.getPath());
                 }
                 else if (mPicType == PicType.Cover) {
@@ -239,7 +243,7 @@ public class PicChooseHelper {
     private void startCrop(Uri uri) {
        // Log.i("info1", "uri: "+uri.toString());
         cropUri=createUri("_crop");
-        ///Log.i("info1", "startCrop: "+cropUri);
+//        Log.i("info1", "startCrop: "+cropUri);
         Intent intent=new Intent("com.android.camera.action.CROP");
         intent.putExtra("crop",true);
         if (mPicType==PicType.Avatar){
@@ -248,10 +252,10 @@ public class PicChooseHelper {
             intent.putExtra("outputX", 300);
             intent.putExtra("outputY", 300);
         }else if (mPicType == PicType.Cover){
-            intent.putExtra("aspectX", 500);
-            intent.putExtra("aspectY", 300);
-            intent.putExtra("outputX", 500);
-            intent.putExtra("outputY", 300);
+            intent.putExtra("aspectX", 800);
+            intent.putExtra("aspectY", 500);
+            intent.putExtra("outputX", 800);
+            intent.putExtra("outputY", 500);
         }
         intent.putExtra("return-data", false);
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString());
@@ -262,7 +266,7 @@ public class PicChooseHelper {
             intent.setDataAndType(uri, "image/*");
             intent.putExtra(MediaStore.EXTRA_OUTPUT, cropUri);
             if (mFragment == null) {
-                mActivity.startActivityForResult(intent, CROP);
+                mActivity.startActivityForResult(intent,CROP);
             } else {
                 mFragment.startActivityForResult(intent, CROP);
             }

@@ -93,7 +93,7 @@ public class RegisterActivity extends BaseActivity {
     private void login() {
         Intent intent=new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intent);
-        finish();
+       removeCurrent();
 
     }
 

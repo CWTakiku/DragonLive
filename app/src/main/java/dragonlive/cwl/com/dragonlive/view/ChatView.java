@@ -99,7 +99,7 @@ public class ChatView extends LinearLayout {
                 customCmd.setCmd(Constants.CMD_CHAT_MSG_LIST);
             }
             customCmd.setParam(chatContentEdit.getText().toString());
-            mOnChatSendListener.onChatSend(customCmd);
+            mOnChatSendListener.onChatSend(customCmd,chatContentEdit);
         }
     }
 
@@ -110,7 +110,7 @@ public class ChatView extends LinearLayout {
     }
 
     public interface OnChatSendListener {
-        public void onChatSend(ILVCustomCmd msg);
+        public void onChatSend(ILVCustomCmd msg,EditText editText);
         void onBackClick();
     }
 }

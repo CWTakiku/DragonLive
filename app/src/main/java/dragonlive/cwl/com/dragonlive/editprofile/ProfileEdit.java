@@ -51,7 +51,9 @@ public class ProfileEdit extends LinearLayout {
     public void set(int iconResId, String key, String value) {
         mIconView.setImageResource(iconResId);
         mKeyView.setText(key);
-        mValueView.setText(value);
+        if (value!=null) {
+            mValueView.setText(value);
+        }
     }
 
     public void updateValue(String value) {

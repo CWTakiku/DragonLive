@@ -1,12 +1,16 @@
 package dragonlive.cwl.com.dragonlive.network;
 
 
+import android.os.Environment;
+
 import com.mysdk.okhttp.CommonOkHttpClient;
 import com.mysdk.okhttp.listener.DisposeDataHandle;
 import com.mysdk.okhttp.listener.DisposeDataListener;
+import com.mysdk.okhttp.listener.DisposeDownloadListener;
 import com.mysdk.okhttp.request.CommonRequest;
 import com.mysdk.okhttp.request.RequestParams;
 
+import dragonlive.cwl.com.dragonlive.model.UpdateInfoModel;
 
 
 /**
@@ -26,9 +30,9 @@ public class RequestCenter {
      *
      * @param listener
      */
-//    public static void checkVersion(DisposeDataListener listener) {
-//        RequestCenter.postRequest(AppNetConfig.UPDATE, null, listener, UpdateInfo.class);
-//    }
+    public static void checkVersion(DisposeDataListener listener) {
+        RequestCenter.postRequest(NetConfig.CHECK_VERSION, null, listener, UpdateInfoModel.class);
+    }
 
 //    public static void requestHomeData(DisposeDataListener listener) {
 //        RequestCenter.postRequest(AppNetConfig.INDEX, null, listener, Index.class);
@@ -52,11 +56,11 @@ public class RequestCenter {
      * @param url APK下载地址
      */
 
-//    public static void requestDownload(DisposeDownloadListener listener, String url) {
-//        CommonOkHttpClient.downloadFile(CommonRequest.
-//                        createDownloadRequest(url),
-//                new DisposeDataHandle(listener, Environment.getExternalStorageDirectory() + "/P2P金融/P2P金融.apk"));
-//    }
+    public static void requestDownload(DisposeDownloadListener listener, String url) {
+        CommonOkHttpClient.downloadFile(CommonRequest.
+                        createDownloadRequest(url),
+                new DisposeDataHandle(listener, Environment.getExternalStorageDirectory() + "/dragonlive/dragonlive.apk"));
+    }
 
 
     /**

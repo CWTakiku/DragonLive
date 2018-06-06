@@ -74,7 +74,7 @@ public class CommonJsonCallback implements Callback {
     public void onResponse(final Call call, final Response response) throws IOException {
 
         final String result = response.body().string();
-        Log.i("info", "onResponse: "+result);
+//        Log.i("info1", "onResponse: "+result);
         final ArrayList<String> cookieLists = handleCookie(response.headers());
         mDeliveryHandler.post(new Runnable() {
             @Override

@@ -115,12 +115,17 @@ public class CustomCmdManager {
            }
        });
 
-
    }
-   public void recMgs(){
+
+
+
+
+
+    public  void recMgs(){
 
            ILVLiveConfig config=MyApplication.getApplication().getLiveConfig();
-       config.setLiveMsgListener(new ILVLiveConfig.ILVLiveMsgListener() {
+
+       config.setLiveMsgListener(new ILVLiveConfig.ILVLiveMsgListener() {  //内存泄漏
            @Override
            public void onNewTextMsg(ILVText text, String SenderId, TIMUserProfile userProfile) {
                //接收到文本消息
@@ -223,7 +228,7 @@ public class CustomCmdManager {
        params.put("action","quit");
        params.put("roomId",String.valueOf(mRoomId));
        params.put("userId",identifier);
-       RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+       RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
            @Override
            public void onSuccess(Object object) {
 
@@ -267,7 +272,7 @@ public class CustomCmdManager {
        params.put("action","quit");
        params.put("roomId",String.valueOf(roomId));
        params.put("userId",identifier);
-       RequestCenter.postRequest(NetConfig.Room, params, new DisposeDataListener() {
+       RequestCenter.postRequest(NetConfig.ROOM, params, new DisposeDataListener() {
            @Override
            public void onSuccess(Object object) {
 

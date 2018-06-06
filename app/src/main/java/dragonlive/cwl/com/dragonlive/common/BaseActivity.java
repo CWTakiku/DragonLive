@@ -1,8 +1,11 @@
 package dragonlive.cwl.com.dragonlive.common;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+
+import com.mysdk.common.ActivityManager;
 
 import butterknife.ButterKnife;
 
@@ -17,6 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
          setContentView(getLayoutId());
           ButterKnife.bind(this);
+        ActivityManager.getInstance().add(this);
         initData();
         initView();
 
@@ -30,5 +34,21 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         ButterKnife.unbind(this);
         super.onDestroy();
+    }
+
+    //启动activity
+    public void goToActivity(Class activity,Bundle bundle){
+        Intent intent=new Intent(this,activity);
+        if (bundle!=null&&bundle.size()>0){
+            intent.putExtra("data",bundle);
+        }
+      startActivity(intent);
+    }
+    //移除当前activity
+    public void removeCurrent(){
+        ActivityManager.getInstance().removeCurrent();
+    }
+    public void removeAll(){
+        ActivityManager.getInstance().removeall();
     }
 }

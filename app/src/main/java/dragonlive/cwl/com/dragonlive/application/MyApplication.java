@@ -8,6 +8,8 @@ import com.alibaba.sdk.android.oss.OSS;
 import com.alibaba.sdk.android.oss.OSSClient;
 import com.alibaba.sdk.android.oss.common.auth.OSSAuthCredentialsProvider;
 import com.alibaba.sdk.android.oss.common.auth.OSSCredentialProvider;
+import com.mob.MobSDK;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.TIMManager;
 import com.tencent.TIMUserProfile;
 import com.tencent.ilivesdk.ILiveConstants;
@@ -23,7 +25,7 @@ import java.util.List;
 import dragonlive.cwl.com.dragonlive.editprofile.CustomProfile;
 
 import static dragonlive.cwl.com.dragonlive.network.NetConfig.ALiEndpoint;
-import static dragonlive.cwl.com.dragonlive.network.NetConfig.StsServerIp;
+import static dragonlive.cwl.com.dragonlive.network.NetConfig.STS_SERVER;
 
 /**
  * Created by cwl on 2018/4/22.
@@ -67,7 +69,7 @@ public class MyApplication extends Application {
             //阿里
             String endpoint = ALiEndpoint;
             // 推荐使用OSSAuthCredentialsProvider，token过期后会自动刷新。
-            String stsServer = StsServerIp;
+            String stsServer = STS_SERVER;
             OSSCredentialProvider credentialProvider = new OSSAuthCredentialsProvider(stsServer);
 //config
             ClientConfiguration conf = new ClientConfiguration();
@@ -77,6 +79,9 @@ public class MyApplication extends Application {
             conf.setMaxErrorRetry(2); // 失败后最大重试次数，默认2次
             OSS oss = new OSSClient(MyApplication.getContext(), endpoint, credentialProvider, conf);
             this.oss=oss;
+
+            MobSDK.init(this);
+            LeakCanary.install(this);
         }
     }
     public void setSelfProfile(TIMUserProfile userProfile) {

@@ -42,7 +42,7 @@ public class LoginActivity extends BaseActivity {
     RelativeLayout activityLogin;
 
     private SharedPreferences sp;
-    private String pwd="";
+   private String pwd="";
     @Override
     protected int getLayoutId() {
         return R.layout.activity_login;
@@ -93,6 +93,7 @@ public class LoginActivity extends BaseActivity {
         String   passwordStr=sp.getString("pwd","");
         mAccountEdt.setText(accountStr);
         mPasswordEdt.setText(passwordStr);
+        pwd=passwordStr;
       //  Log.i("info1", "logined: "+accountStr);
        // Log.i("info1", "pa : "+passwordStr);
 
@@ -123,24 +124,25 @@ public class LoginActivity extends BaseActivity {
         final String   accountStr = mAccountEdt.getText().toString();
         String   passwordStr = mPasswordEdt.getText().toString();
 
-              pwd=passwordStr;
+      pwd=passwordStr;
         if (TextUtils.isEmpty(accountStr) || TextUtils.isEmpty(passwordStr)){
             Toast.makeText(this, "输入不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        ILiveLoginManager.getInstance().tlsLoginAll(accountStr, passwordStr, new ILiveCallBack() {
-            @Override
-            public void onSuccess(Object data) {
-                  LoginLive(accountStr,String.valueOf(data));
-            }
+     ILiveLoginManager.getInstance().tlsLoginAll(accountStr, passwordStr, new ILiveCallBack() {
+         @Override
+         public void onSuccess(Object data) {
+             LoginLive(accountStr, String.valueOf(data));
+         }
 
-            @Override
-            public void onError(String module, int errCode, String errMsg) {
-                //登录失败
-                Toast.makeText(LoginActivity.this, "tls登录失败：" + errMsg, Toast.LENGTH_SHORT).show();
-            }
-        });
+         @Override
+         public void onError(String module, int errCode, String errMsg) {
+             //登录失败
+             Toast.makeText(LoginActivity.this, "tls登录失败：" + errMsg, Toast.LENGTH_SHORT).show();
+         }
+     });
+
     }
 
     private void LoginLive(final String accountStr, final String passwordStr){
@@ -164,12 +166,10 @@ public class LoginActivity extends BaseActivity {
                     intent.setClass(LoginActivity.this, EditProfileActivity.class);
                     startActivity(intent);
                 }else {
-                    Intent intent=new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
+                  goToActivity(MainActivity.class,null);
                 }
                 getSelfInfo();
-
-                finish();
+               removeCurrent();
             }
 
             @Override

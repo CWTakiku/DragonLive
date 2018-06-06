@@ -107,7 +107,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:background="#333" />
+            <dragonlive.cwl.com.dragonlive.editprofile.ProfileTextView
+                android:id="@+id/share_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+            </dragonlive.cwl.com.dragonlive.editprofile.ProfileTextView>
             <Button
                 android:id="@+id/complete"
                 android:layout_width="match_parent"

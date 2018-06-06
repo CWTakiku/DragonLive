@@ -28,6 +28,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 import dragonlive.cwl.com.dragonlive.MainActivity;
 import dragonlive.cwl.com.dragonlive.R;
 import dragonlive.cwl.com.dragonlive.application.MyApplication;
@@ -66,6 +67,8 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
     Button mCompleteBtn;
     @Bind(R.id.activity_edit_profile)
     LinearLayout activityEditProfile;
+    @Bind(R.id.share_view)
+    ProfileTextView mShareView;
     private TIMUserProfile mUserProfile;
     private PicChooseHelper mPicChooserHelper;
 
@@ -102,6 +105,7 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
         mLevelView.set(R.drawable.ic_info_level, "等级", "0");
         mGetNumsView.set(R.drawable.ic_info_get, "获得票数", "0");
         mSendNumsView.set(R.drawable.ic_info_send, "送出票数", "0");
+        mShareView.set(R.drawable.share_app,"分享",null);
     }
 
     private void getSelfInfo() {
@@ -160,6 +164,7 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
         mRenzhengEdt.setOnClickListener(clickListener);
         mLocationEdt.setOnClickListener(clickListener);
         mCompleteBtn.setOnClickListener(clickListener);
+        mShareView.setOnClickListener(clickListener);
     }
 
     @Override
@@ -194,6 +199,9 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
                 case R.id.location:
                     //修改位置
                     showEditLocationDialog();
+                    break;
+                case R.id.share_view:
+                    showShare();
                     break;
                 case R.id.complete:
                     //完成，点击跳转到主界面
@@ -351,6 +359,27 @@ public class EditProfileFragment extends android.support.v4.app.Fragment {
                   getSelfInfo();
             }
         });
+    }
+
+    private void showShare() {
+        OnekeyShare oks = new OnekeyShare();
+        //关闭sso授权
+        oks.disableSSOWhenAuthorize();
+
+        // title标题，微信、QQ和QQ空间等平台使用
+        oks.setTitle(getString(R.string.share));
+        // titleUrl QQ和QQ空间跳转链接
+        oks.setTitleUrl("http://sharesdk.cn");
+        // text是分享文本，所有平台都需要这个字段
+        oks.setText("dragonlive互动直播");
+        // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+       oks.setImageUrl(MyApplication.getApplication().getSelfProfile().getFaceUrl()); //网络图片
+        // url在微信、微博，Facebook等平台中使用
+        oks.setUrl("http://sharesdk.cn");
+        // comment是我对这条分享的评论，仅在人人网使用
+        oks.setComment(MyApplication.getApplication().getSelfProfile().getNickName()+"的直播间");
+        // 启动分享GUI
+        oks.show(getActivity());
     }
 
     @Override
